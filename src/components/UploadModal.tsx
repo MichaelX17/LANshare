@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useFiles } from "@/hooks/useFiles";
 import { Locale } from "@/i18n/translations";
 import { useI18n } from "@/i18n/I18nProvider";
+import { withBasePath } from "@/lib/basePath";
 
 const FILES_REFRESH_EVENT = "files:refresh";
 
@@ -280,7 +281,7 @@ export function UploadModal({ isOpen, onClose }: Props) {
 
     try {
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/api/upload");
+      xhr.open("POST", withBasePath("/api/upload"));
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {

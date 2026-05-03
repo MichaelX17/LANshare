@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 function normalizeBasePath(value: string | undefined): string {
-  if (!value) return "/files";
+  if (!value) return "";
   if (value === "/") return "";
 
   const clean = value.replace(/^\/+|\/+$/g, "");
@@ -9,8 +9,7 @@ function normalizeBasePath(value: string | undefined): string {
 }
 
 const nextConfig: NextConfig = {
-  // This path is used by Nginx and can be changed per environment.
-  // Example: NEXT_PUBLIC_BASE_PATH=/files
+  // Optional basePath for reverse-proxy subpaths (example: /files).
   basePath: normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH),
 
   // Better packaging for PM2/self-hosted deployments.

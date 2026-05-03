@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile } from "fs/promises";
 import path from "path";
-import { ensureUploadDir } from "@/lib/fileUtils";
+import { ensureUploadDir, getUploadDir } from "@/lib/fileUtils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const fileName = file.name;
-    const filePath = path.join(process.cwd(), "uploads", fileName);
+    const filePath = path.join(getUploadDir(), fileName);
     await writeFile(filePath, buffer);
 
     return NextResponse.json({ success: true, fileName });

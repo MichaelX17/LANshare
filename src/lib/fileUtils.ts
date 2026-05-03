@@ -2,7 +2,17 @@ import fs from "fs/promises";
 import path from "path";
 import { FileItem } from "@/types/file";
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
+function resolveUploadDir(): string {
+  const configured = process.env.UPLOAD_DIR?.trim();
+  if (!configured) return path.join(process.cwd(), "uploads");
+  return path.isAbsolute(configured) ? configured : path.join(process.cwd(), configured);
+}
+
+const UPLOAD_DIR = resolveUploadDir();
+
+export function getUploadDir(): string {
+  return UPLOAD_DIR;
+}
 
 export async function ensureUploadDir() {
   try {

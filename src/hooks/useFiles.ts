@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { FileItem } from "@/types/file";
+import { withBasePath } from "@/lib/basePath";
 
 const FILES_REFRESH_EVENT = "files:refresh";
 
@@ -11,7 +12,7 @@ export function useFiles() {
 
   const fetchFiles = useCallback(async () => {
     try {
-      const res = await fetch("/api/files");
+      const res = await fetch(withBasePath("/api/files"));
       if (!res.ok) throw new Error();
       const data = await res.json();
       setFiles(data);
@@ -29,7 +30,7 @@ export function useFiles() {
 
   const deleteFile = useCallback(async (filename: string) => {
     try {
-      const res = await fetch(`/api/files/${encodeURIComponent(filename)}`, {
+      const res = await fetch(withBasePath(`/api/files/${encodeURIComponent(filename)}`), {
         method: "DELETE",
       });
 
@@ -46,7 +47,7 @@ export function useFiles() {
 
   const downloadFile = useCallback((filename: string) => {
     const a = document.createElement("a");
-    a.href = `/api/download/${encodeURIComponent(filename)}`;
+    a.href = withBasePath(`/api/download/${encodeURIComponent(filename)}`);
     a.download = filename;
     document.body.appendChild(a);
     a.click();
