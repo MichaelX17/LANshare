@@ -1,16 +1,34 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // 💡 ESTA ES LA CLAVE: Indica a Next.js que la app vive en /archivos
-  basePath: '/files',
+import type { NextConfig } from "next";
 
-  // Permite orígenes de desarrollo habituales en redes locales (solo aplica en dev).
-  allowedDevOrigins: ['localhost', '*.localhost', '192.168.*.*', '10.*.*.*', '172.*.*.*'],
+function normalizeBasePath(value: string | undefined): string {
+  if (!value) return "/files";
+  if (value === "/") return "";
 
-  // Permitir servir archivos estáticos desde uploads en desarrollo (opcional)
+  const clean = value.replace(/^\/+|\/+$/g, "");
+  return clean ? `/${clean}` : "";
+}
+
+const nextConfig: NextConfig = {
+  // This path is used by Nginx and can be changed per environment.
+  // Example: NEXT_PUBLIC_BASE_PATH=/files
+  basePath: normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH),
+
+  // Better packaging for PM2/self-hosted deployments.
+  output: "standalone",
+
+  // Allows common LAN origins in development mode only.
+  allowedDevOrigins: [
+    "localhost",
+    "*.localhost",
+    "127.0.0.1",
+    "192.168.*.*",
+    "10.*.*.*",
+    "172.*.*.*",
+  ],
+
   async headers() {
     return [
       {
-        // ⚠️ Nota: Al añadir basePath, Next.js buscará automáticamente en /archivos/uploads/
         source: "/uploads/:path*",
         headers: [{ key: "Cache-Control", value: "no-store" }],
       },
@@ -18,4 +36,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
