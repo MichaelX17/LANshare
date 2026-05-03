@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Permite orígenes de desarrollo habituales en redes locales (solo aplica en dev).
+  allowedDevOrigins: ['localhost', '*.localhost', '192.168.*.*', '10.*.*.*', '172.*.*.*'],
+
   // Permitir servir archivos estáticos desde uploads en desarrollo (opcional)
   async headers() {
     return [
@@ -12,8 +15,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-
-module.exports = {
-  allowedDevOrigins: ['192.168.0.101'],
-}
 
