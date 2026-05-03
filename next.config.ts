@@ -1,28 +1,22 @@
 import type { NextConfig } from "next";
 
-function normalizeBasePath(value: string | undefined): string {
-  if (!value) return "";
-  if (value === "/") return "";
-
-  const clean = value.replace(/^\/+|\/+$/g, "");
-  return clean ? `/${clean}` : "";
-}
-
 const nextConfig: NextConfig = {
-  // Optional basePath for reverse-proxy subpaths (example: /files).
-  basePath: normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH),
+  // 1. Eliminamos el basePath para que la app funcione en la raíz del puerto 3001
+  basePath: "",
 
-  // Better packaging for PM2/self-hosted deployments.
-  output: "standalone",
+  // 2. Mantenemos las Server Actions habilitadas para tu IP
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["192.168.0.102:3001", "localhost:3001"],
+    },
+  },
 
-  // Allows common LAN origins in development mode only.
+  // 3. Permitimos conexiones desde cualquier dispositivo de tu red
   allowedDevOrigins: [
     "localhost",
-    "*.localhost",
     "127.0.0.1",
+    "192.168.0.102",
     "192.168.*.*",
-    "10.*.*.*",
-    "172.*.*.*",
   ],
 
   async headers() {
