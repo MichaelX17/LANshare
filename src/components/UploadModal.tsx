@@ -3,57 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useFiles } from "@/hooks/useFiles";
-import { Locale } from "@/i18n/translations";
 import { useI18n } from "@/i18n/I18nProvider";
 import { withBasePath } from "@/lib/basePath";
 
 const FILES_REFRESH_EVENT = "files:refresh";
-
-const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024;
-const ALLOWED_MIME_PREFIXES = ["image/", "video/", "audio/"];
-const ALLOWED_MIME_TYPES = new Set([
-  "application/pdf",
-  "application/json",
-  "application/zip",
-  "application/x-zip-compressed",
-  "application/x-7z-compressed",
-  "application/vnd.rar",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  "application/vnd.ms-powerpoint",
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  "text/plain",
-  "text/csv",
-]);
-const ALLOWED_EXTENSIONS = new Set([
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "webp",
-  "svg",
-  "mp4",
-  "mp3",
-  "wav",
-  "pdf",
-  "txt",
-  "md",
-  "csv",
-  "json",
-  "zip",
-  "rar",
-  "7z",
-  "tar",
-  "gz",
-  "doc",
-  "docx",
-  "xls",
-  "xlsx",
-  "ppt",
-  "pptx",
-]);
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) {
@@ -70,26 +23,6 @@ function formatFileSize(bytes: number): string {
   }
 
   return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[unitIndex]}`;
-}
-
-function validateFile(candidate: File, locale: Locale): string | null {
-  if (candidate.size > MAX_FILE_SIZE_BYTES) {
-    return locale === "en" ? "The file exceeds the 100 MB limit." : "El archivo supera el limite de 100 MB.";
-  }
-
-  const extension = candidate.name.split(".").pop()?.toLowerCase() ?? "";
-  const hasAllowedMime =
-    ALLOWED_MIME_TYPES.has(candidate.type) ||
-    ALLOWED_MIME_PREFIXES.some((prefix) => candidate.type.startsWith(prefix));
-  const hasAllowedExtension = ALLOWED_EXTENSIONS.has(extension);
-
-  if (!hasAllowedMime && !hasAllowedExtension) {
-    return locale === "en"
-      ? "File type not allowed. Use a common document, image, audio, video, or archive format."
-      : "Tipo de archivo no permitido. Usa un formato comun de documento, imagen, audio, video o comprimido.";
-  }
-
-  return null;
 }
 
 interface Props {
@@ -151,14 +84,6 @@ export function UploadModal({ isOpen, onClose }: Props) {
       return;
     }
 
-    const validationError = validateFile(droppedFile, locale);
-    if (validationError) {
-      setError(validationError);
-      setFile(null);
-      setProgress(0);
-      return;
-    }
-
     setError(null);
     setFile(droppedFile);
     setProgress(0);
@@ -167,17 +92,9 @@ export function UploadModal({ isOpen, onClose }: Props) {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      const validationError = validateFile(selectedFile, locale);
-
-      if (validationError) {
-        setError(validationError);
-        setFile(null);
-        setProgress(0);
-      } else {
-        setError(null);
-        setFile(selectedFile);
-        setProgress(0);
-      }
+      setError(null);
+      setFile(selectedFile);
+      setProgress(0);
     }
 
     e.target.value = "";
@@ -265,12 +182,6 @@ export function UploadModal({ isOpen, onClose }: Props) {
 
   const handleUpload = async () => {
     if (!file) return;
-
-    const validationError = validateFile(file, locale);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
 
     setUploading(true);
     setProgress(0);

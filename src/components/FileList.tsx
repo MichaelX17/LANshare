@@ -73,7 +73,7 @@ export function FileList() {
 
   return (
     <>
-      <div className="min-w-0 space-y-3 lg:space-y-0">
+      <div className="min-w-0 space-y-3 pb-24 md:pb-0 lg:space-y-0">
       <div className="grid min-w-0 gap-3 lg:hidden">
         {files.map((file) => (
           <article key={file.name} className="elevated-card w-full max-w-full overflow-hidden rounded-2xl border border-outline-variant/80 bg-surface-container-lowest/92 p-4 backdrop-blur-sm">

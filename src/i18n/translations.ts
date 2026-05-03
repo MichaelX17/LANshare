@@ -114,7 +114,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       transferEnabled: "Transferencia local habilitada",
     },
     header: {
-      appName: "Local Server Storage",
+      appName: "LANshare",
       allFiles: "Todos",
       uploadShort: "Subir",
       theme: "Tema",
@@ -187,7 +187,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       chooseFile: "Choose file",
     },
     page: {
-      serverBadge: "Local server",
+      serverBadge: "LANshare",
       heroTitle: "Your files, close to you",
       heroDescription: "Active local network to share in seconds from any device at home or office.",
       networkStatus: "Network status",
@@ -195,7 +195,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       transferEnabled: "Local transfer enabled",
     },
     header: {
-      appName: "Local Server Storage",
+      appName: "LANshare",
       allFiles: "All files",
       uploadShort: "Upload",
       theme: "Theme",

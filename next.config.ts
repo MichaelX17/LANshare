@@ -5,11 +5,11 @@ const nextConfig: NextConfig = {
   basePath: "",
 
   // 2. Mantenemos las Server Actions habilitadas para tu IP
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["192.168.0.102:3001", "localhost:3001"],
-    },
-  },
+  // experimental: {
+  //   serverActions: {
+  //     allowedOrigins: ["192.168.0.102:3001", "localhost:3001"],
+  //   },
+  // },
 
   // 3. Permitimos conexiones desde cualquier dispositivo de tu red
   allowedDevOrigins: [

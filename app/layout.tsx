@@ -15,7 +15,7 @@ const display = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Local Server Storage",
+  title: "LANshare",
   description: "Sistema de archivos en red local",
 };
 
