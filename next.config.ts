@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // 💡 ESTA ES LA CLAVE: Indica a Next.js que la app vive en /archivos
-  basePath: '/archivos',
+  basePath: '/files',
 
   // Permite orígenes de desarrollo habituales en redes locales (solo aplica en dev).
   allowedDevOrigins: ['localhost', '*.localhost', '192.168.*.*', '10.*.*.*', '172.*.*.*'],
