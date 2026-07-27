@@ -16,12 +16,12 @@ const sanitizeName = (name: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 150) || `file-${Date.now()}`;
 
-const writeStreamToFile = async (file: any, destPath: string) => {
-  const stream = file.stream();
-  if (!stream) {
-    throw new Error("Unable to read file stream");
+const writeStreamToFile = async (body: ReadableStream<Uint8Array> | null, destPath: string) => {
+  if (!body) {
+    throw new Error("Request body is missing");
   }
-  const nodeStream = Readable.fromWeb(stream as any);
+
+  const nodeStream = Readable.fromWeb(body as any);
   const writeStream = fs.createWriteStream(destPath);
   await pipelineAsync(nodeStream, writeStream);
 };
@@ -30,19 +30,15 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
-    const maybeFile = formData.get("file") as any;
-    if (!maybeFile || typeof maybeFile.stream !== "function") {
-      return NextResponse.json({ error: "No se envió ningún archivo" }, { status: 400 });
-    }
-
     await ensureUploadDir();
 
-    const rawName = maybeFile.name || `upload-${Date.now()}`;
+    const headerName = request.headers.get("x-file-name") || "";
+    const decodedName = headerName ? decodeURIComponent(headerName) : "";
+    const rawName = decodedName || `upload-${Date.now()}`;
     const fileName = sanitizeName(rawName);
     const filePath = path.join(getUploadDir(), fileName);
 
-    await writeStreamToFile(maybeFile, filePath);
+    await writeStreamToFile(request.body, filePath);
 
     return NextResponse.json({ success: true, fileName });
   } catch (error) {

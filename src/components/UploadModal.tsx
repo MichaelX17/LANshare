@@ -187,12 +187,11 @@ export function UploadModal({ isOpen, onClose }: Props) {
     setProgress(0);
     setError(null);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     try {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", withBasePath("/api/upload"));
+      xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+      xhr.setRequestHeader("X-File-Name", encodeURIComponent(file.name));
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
@@ -218,7 +217,7 @@ export function UploadModal({ isOpen, onClose }: Props) {
         setError(dictionary.uploadModal.uploadNetworkError);
       };
 
-      xhr.send(formData);
+      xhr.send(file);
     } catch (err) {
       console.error(err);
       setUploading(false);
